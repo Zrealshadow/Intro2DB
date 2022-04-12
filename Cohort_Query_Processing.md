@@ -26,9 +26,9 @@ Cohort operation is  to capture the effect of social differences. Social scienti
 
 Example of cohort analysis.
 
-![Tuples](./assets/Tuples.png)
+![Tuples](https://raw.githubusercontent.com/Zrealshadow/Intro2DB/main/assets/Cohana/Tuples.png)
 
-![CohortResult](./assets/CohortResult.png)
+![CohortResult](https://raw.githubusercontent.com/Zrealshadow/Intro2DB/main/assets/Cohana/CohortResult.png)
 
 >Back to our in-game shopping example, suppose we choose launch as the birth action and week as the cohort time bin interval, the activity tuples of player 001 are assigned to 2013-05-19 launch cohort since the activity tuple t1 (called birth activity tuple) indicates that player 001 first launched the game at that week. We further partition activity tuples in 2013-05-19 launch cohort into sub-partitions identified by age, and finally report the average gold spent for each (cohort, age) bucket. The result is shown in Table 3.
 
@@ -90,9 +90,9 @@ In ***Cohort*** Operation, it will use the `SkipCurUser` and `GetNextUser` inter
 
 COHANA set different query situation and compare different query executor in these queries. It also study the effect of chunk on the performance of query executor.
 
-![RelatedResult](./assets/RelatedResult.png)
+![RelatedResult](https://raw.githubusercontent.com/Zrealshadow/Intro2DB/main/assets/Cohana/RelatedResult.png)
 
-![Result](./assets/Result.png)
+![Result](https://raw.githubusercontent.com/Zrealshadow/Intro2DB/main/assets/Cohana/Result.png)
 
 
 
