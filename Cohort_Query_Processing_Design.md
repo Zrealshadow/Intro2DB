@@ -20,11 +20,49 @@ Thus we can summary the tree step of the basic cohort query, which is also the t
 - AgeGeneration
 - CohortGeneration
 
-These three step should be executed step by step in a CohortExecuteUnit.
+These three steps should be executed step by step in a CohortExecuteUnit.
 
 ### Pattern Design
 
+(Following part is for cohort query processing only. We can consider this part as a component of the whole query processing module.  If we want to maintain a good open source project, we have to support base query process in the future)
+
 There are some assumptions before we build the query execution part.
 
-For one table, we allow append operation to add data. The data in every append operation is called a append block. Considering the application scenarios of cohort, we assume that *Every Append Block contains a bunch of behavior data item within a certain time window*.  
+For one table, we allow append operation to add data. The data in every append operation is called a append block. Considering the application scenarios of cohort, we assume that *Every Append Block contains a bunch of behavior data item within a certain time window*.  For the layout of the Append Block, we also assume that *tuples are clustered in userId, and for one user, its tuple is sorted in time serise*. These are two constrains we set for input data.
+
+First we create a class `CohortOperator` to combine above three sub-process and also CohortAttributeGeneration step. (This step can be null). For three sub-process, we can create classes separately. There is no need to allow them to implement same interface, since these three classes are all needed in Cohort Processing. However, every class have to implement `init` and `process` two functions. `init` load filter from query.
+
+Simply introduce the logic of every sub-process.
+
+The logic of BirthSelection's `process`
+
+1. Iterate append block, check whether the time feature's block obeys the condistion of filters.
+2. For one block, iterate the Cublet, check the meta info whether possible birth tuple is existed.
+3. If there are possible birth tuples, check the data chunk, for eligible tuple, we record the userId (String) and BirthTime in a HashMap. 
+4. `process` return these HashMap
+
+The logic of AgeGeneration's `process`
+
+1. The Iterate and necessary check pattern is like above BirthSelection's process
+2. In data chunk, for eligible tuple, we record their unique identifier among whole table in a ArrayList (CubletId-offsetInRLE).
+3. `process` return the ArrayList which contain accessible tuple. **These ArrayList is the scope the rest operator applied on.** Each element of this ArrayList is a Array contain accessible tuple. The index of the ArrayList is age in cohort.
+
+The logic of CohortGeneration's `process`
+
+1) For every element in Arraylist returned by AgeGeneration's `process`, We maintain  HashMap \<Cohort - SelectedValueList\>. 
+2) Iterate these Accessible Tuple, store these value and apply certain analysis function.
+
+In order to reduce the usage of memory, we can implement the `CohortOperator` as an iterator container. Everytime `step` is called, it return the i-th age's cohort data (HashMap).
+
+
+
+Above content is the simply imagination of modular cohort query's execution processing. I think it can solve the continuous problem. Additionally, apart from cohort query, we should reconstruct the filter class in the next few days. Certainly, there are many other aspects to consider in code level, such as the memory usage and the query optimization, which are left in the future work.
+
+
+
+
+
+
+
+
 
