@@ -26,5 +26,5 @@ These three step should be executed step by step in a CohortExecuteUnit.
 
 There are some assumptions before we build the query execution part.
 
-1. 
+For one table, we allow append operation to add data. The data in every append operation is called a append block. Considering the application scenarios of cohort, we assume that *Every Append Block contains a bunch of behavior data item within a certain time window*.  
 
