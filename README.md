@@ -10,5 +10,5 @@ Thus I take the issue of github repository as an search engine for my keynote.
 
 
 
-**Have fun in the journal of system !**
+**Have fun in the journey of system !**
 
